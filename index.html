@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Management</title>
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/156px-Warning.svg.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+</head>
+<body class="container mt-5">
+    
+
+    <section class="row mb-3">
+
+		<div class="risk col-6">
+
+            <label for="risk "> Risk ($)</label><br>
+            <input type="number" min="0" value="200" id="risk" class="form-control">
+
+        </div> 
+
+		<div class="select col-6">
+
+            <label for="risk ">Select Currency</label><br>
+            <select id="list">
+            <option value="usd">XXX/USD</option>
+<option value="gold">XAU/GOLD</option>
+            
+            <option value="jpy">XXX/JPY</option>
+            <option value="aud">XXX/AUD</option>
+            <option value="nzd">XXX/NZD</option>
+            <option value="gbp">XXX/GBP</option>
+            <option value="cad">XXX/CAD</option>
+            <option value="chf">XXX/CHF</option>
+        </select>
+
+        </div> 
+        
+        <div class="entry col-6">
+
+            <label for="entry"> Entry </label><br>
+            <input type="number" value="1." min="0" id="entry" class="form-control">
+
+        </div>
+
+        <div class="stoploss col-6">
+
+            <label for="stoploss"> Stop Loss </label><br>
+            <input type="number" value="1." min="0" id="stoploss" class="form-control">
+
+        </div>
+        
+        <div class="col-12">
+
+        <button type="button" id="calculate" class="mt-3 btn btn-secondary btn-sm btn-block" >Calculate</button>
+
+        </div>
+        
+
+    </section>
+    
+    <section class="row mb-3 calc">
+
+        <p class="col-4"> <span id="pips-value"> 0 </span> pips </p>
+        <p class="col-4"> $ <span id="pip-value"> 0 </span> /pip</p>
+        <p class="col-4"> Volume = <span id="lot-value"> 0 </span> </p>
+
+
+    </section>
+	<section class="row mb-3">
+		<div class="col-6">
+			<p> Tp 1 = <span id="tp-value-1"> 0 </span> </p>
+			<p> Tp 2 = <span id="tp-value-2"> 0 </span> </p>
+			<p> Tp 2.5 = <span id="tp-value-2a"> 0 </span> </p>
+			<p> Tp 3 = <span id="tp-value-3"> 0 </span> </p>
+			<p> Tp 4 = <span id="tp-value-4"> 0 </span> </p>
+		</div>
+		<div class="col-6">
+			
+		</div>
+	</section>
+    
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+// Risk
+var risk = document.getElementById("risk");
+// Price
+var entry = document.getElementById("entry");
+var stoploss = document.getElementById("stoploss");
+// Calculate btn
+var calculatebtn = document.getElementById('calculate');
+
+// Show
+var showpips = document.getElementById("pips-value");
+var showpipvalue = document.getElementById("pip-value");
+var showlotvalue = document.getElementById("lot-value");
+var showtp1 = document.getElementById("tp-value-1");
+var showtp2 = document.getElementById("tp-value-2");
+var showtp2a = document.getElementById("tp-value-2a");
+var showtp3 = document.getElementById("tp-value-3");
+var showtp4 = document.getElementById("tp-value-4");
+
+calculatebtn.onclick = function calculate() {
+	var selectedValue = document.getElementById("list").value;
+	var pips, pipvalue, lot;
+	var digitss;
+    // alert(entry.value + "+" + stoploss.value);
+	var distance = (entry.value - stoploss.value);
+	var priceadd1=distance*1*100000;
+	var priceadd2=distance*2*100000;
+	var priceadd2a=distance*2.5*100000;
+	var priceadd3=distance*3*100000;
+	var priceadd4=distance*4*100000;
+	var en=entry.value*100000;
+	var tp1 =	(en+priceadd1)/100000;
+	var tp2 =	(en+priceadd2)/100000;
+	var tp2a =	(en+priceadd2a)/100000;
+	var tp3 =	(en+priceadd3)/100000;
+	var tp4 =	(en+priceadd4)/100000;
+	
+	if(selectedValue=="gold")
+	{
+		digitss = 2;
+		pips = Math.abs(((entry.value - stoploss.value) * 10 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 10;
+	}
+	else if(selectedValue=="jpy")
+	{
+		digitss = 3;
+		pips = Math.abs(((entry.value - stoploss.value) * 100 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 9;	
+	}
+	else if(selectedValue=="usd")
+	{
+		digitss = 5;
+		pips = Math.abs(((entry.value - stoploss.value) * 10000 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 10;	
+	}
+	else if(selectedValue=="aud")
+	{
+		digitss = 5;
+		pips = Math.abs(((entry.value - stoploss.value) * 10000 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 7.25;	
+	}
+	else if(selectedValue=="nzd")
+	{
+		digitss = 5;
+		pips = Math.abs(((entry.value - stoploss.value) * 10000 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 7;	
+	}
+	else if(selectedValue=="gbp")
+	{
+		digitss = 5;
+		pips = Math.abs(((entry.value - stoploss.value) * 10000 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 13.5;	
+	}
+	else if(selectedValue=="cad")
+	{
+		digitss = 5;
+		pips = Math.abs(((entry.value - stoploss.value) * 10000 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 7.9;	
+	}
+	else if(selectedValue=="chf")
+	{
+		digitss = 5;
+		pips = Math.abs(((entry.value - stoploss.value) * 10000 )) ;
+		pipvalue = risk.value / pips;
+		lot = pipvalue / 10.7;	
+	}
+	
+    showpips.innerHTML=parseFloat(pips).toFixed(1);
+    showpipvalue.innerHTML=parseFloat(pipvalue).toFixed(2);
+    showlotvalue.innerHTML=parseFloat(lot).toFixed(2);
+    showtp1.innerHTML=parseFloat(tp1).toFixed(digitss);
+    showtp2.innerHTML=parseFloat(tp2).toFixed(digitss);
+    showtp2a.innerHTML=parseFloat(tp2a).toFixed(digitss);
+    showtp3.innerHTML=parseFloat(tp3).toFixed(digitss);
+    showtp4.innerHTML=parseFloat(tp4).toFixed(digitss);
+
+}
+
+
+
+</script>
+</body>
+</html>
